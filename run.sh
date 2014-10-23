@@ -3,11 +3,12 @@
 # Fail hard and fast
 set -eo pipefail
 
+export NGINX_WORKERS=${$NGINX_WORKERS:-1}
 export ETCD_PORT=${ETCD_PORT:-4001}
 export ETCD_HOST=${ETCD_HOST:-172.17.42.1}
 export ETCD="$ETCD_HOST:$ETCD_PORT"
 
-echo "[nginx] booting container. ETCD: $ETCD"
+echo "[nginx] booting container workers: $NGINX_WORKERS etcd: $ETCD"
 
 # Loop until confd has updated the nginx config
 until confd -onetime -node $ETCD -config-file /etc/confd/conf.d/nginx.toml; do
