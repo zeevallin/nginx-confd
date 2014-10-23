@@ -4,8 +4,8 @@
 set -eo pipefail
 
 export ETCD_PORT=${ETCD_PORT:-4001}
-export HOST_IP=${HOST_IP:-172.17.42.1}
-export ETCD="$HOST_IP:$ETCD_PORT"
+export ETCD_HOST=${ETCD_HOST:-172.17.42.1}
+export ETCD="$ETCD_HOST:$ETCD_PORT"
 
 echo "[nginx] booting container. ETCD: $ETCD"
 
