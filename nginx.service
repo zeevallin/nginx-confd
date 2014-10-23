@@ -5,7 +5,8 @@ Description=nginx
 TimeoutStartSec=0
 EnvironmentFile=/etc/environment
 ExecStartPre=/usr/bin/docker pull chatspry/fleet-nginx
-ExecStart=/usr/bin/docker run --rm --name nginx -p 80:80 -p 443:443 -e HOST_IP=${COREOS_PUBLIC_IPV4} NGINX_WORKERS=$(nproc) chatspry/fleet-nginx
+ExecStart=/usr/bin/docker run --rm --name nginx -p 80:80 -p 443:443 -e NGINX_WORKERS="$(nproc)" -e ETCD_HOST="$(ifconfig docker0 | head -n2 | tail -n 1 | awk -F 'inet ' '{ printf $2 }' | cut -d' ' -f1)" chatspry/fleet-nginx
+
 ExecStop=/usr/bin/docker kill nginx
 
 [X-Fleet]
