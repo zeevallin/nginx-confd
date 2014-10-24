@@ -4,7 +4,8 @@ Description=nginx
 [Service]
 TimeoutStartSec=0
 EnvironmentFile=/etc/environment
-Environment=NGINX_WORKERS=$(/usr/bin/nproc) ETCD_HOST=$(/usr/bin/ifconfig docker0 | head -n2 | tail -n 1 | awk -F 'inet ' '{ printf $2 }' | cut -d' ' -f1)
+Environment=ETCD_HOST=$(/usr/bin/ifconfig docker0 | head -n2 | tail -n 1 | awk -F 'inet ' '{ printf $2 }' | cut -d' ' -f1)
+Environment=NGINX_WORKERS=$(/usr/bin/nproc)
 ExecStartPre=/usr/bin/docker pull chatspry/fleet-nginx
 ExecStart=/usr/bin/docker run --rm --name nginx -p 80:80 -p 443:443 chatspry/fleet-nginx
 
