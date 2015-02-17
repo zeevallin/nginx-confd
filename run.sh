@@ -1,24 +1,23 @@
 #!/bin/bash
 
-# Fail hard and fast
 set -eo pipefail
 
-export ETCD_PORT=${ETCD_PORT:-4001}
-export HOST_IP=${HOST_IP:-172.17.42.1}
-export ETCD="$HOST_IP:$ETCD_PORT"
+echo "---> booting container with etcd ($ETCD_HOST)"
 
-echo "[nginx] booting container. ETCD: $ETCD"
-
-# Loop until confd has updated the nginx config
-until confd -onetime -node $ETCD -config-file /etc/confd/conf.d/nginx.toml; do
-  echo "[nginx] waiting for confd to refresh nginx.conf"
+until confd -onetime -node $ETCD_HOST -config-file /etc/confd/conf.d/certs.toml; do
+  echo "---> waiting for confd to update certificates"
   sleep 5
 done
 
-# Run confd in the background to watch the upstream servers
-confd -interval 10 -node $ETCD -config-file /etc/confd/conf.d/nginx.toml &
-echo "[nginx] confd is listening for changes on etcd..."
+until confd -onetime -node $ETCD_HOST -config-file /etc/confd/conf.d/nginx.toml; do
+  echo "---> waiting for confd to update nginx config"
+  sleep 5
+done
+
+confd -interval 10 -node $ETCD_HOST -config-file /etc/confd/conf.d/certs.toml &
+confd -interval 10 -node $ETCD_HOST -config-file /etc/confd/conf.d/nginx.toml &
+echo "---> confd is listening for changes on etcd..."
 
 # Start nginx
-echo "[nginx] starting nginx service..."
-nginx start
+echo "---> starting nginx service..."
+nginx

@@ -1,0 +1,19 @@
+server:
+  build: .
+  links:
+    - "etcd:etcd"
+  ports:
+    - "80:80"
+    - "443:443"
+  volumes:
+    - run.sh:/run.sh:ro
+    - certs.sh:/certs.sh:ro
+    - html/:/etc/nginx/html/:ro
+    - conf.d/:/etc/confd/conf.d/:ro
+    - templates/:/etc/confd/templates/:ro
+
+etcd:
+  image: slintes/etcd:latest
+  ports:
+    - "4001:4001"
+    - "7001:7001"

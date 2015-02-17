@@ -1,0 +1,2 @@
+{{range gets "/certs/*"}}/www{{.Key}}
+{{end}}

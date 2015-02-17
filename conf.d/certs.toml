@@ -1,0 +1,14 @@
+[template]
+owner = "root"
+group = "www-data"
+mode = "0640"
+
+src = "certs.txt"
+dest = "/tmp/certs.txt"
+
+reload_cmd = "/certs.sh"
+
+prefix = "/www"
+keys = [
+  "/certs"
+]
