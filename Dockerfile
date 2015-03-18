@@ -42,8 +42,7 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
 
 # set up default scripts
 COPY run.sh /run.sh
-COPY certs.sh /certs.sh
-RUN chmod +x /run.sh /certs.sh
+RUN chmod +x /run.sh
 
 WORKDIR /
 USER root
