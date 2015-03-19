@@ -1,15 +1,33 @@
-server:
-  build: .
+proxy:
+  build: proxy
   links:
-    - "etcd:etcd"
+    - etcd:etcd
   ports:
     - "80:80"
     - "443:443"
   volumes:
-    - run.sh:/run.sh:ro
-    - html/:/etc/nginx/html/:ro
-    - conf.d/:/etc/confd/conf.d/:ro
-    - templates/:/etc/confd/templates/:ro
+    - proxy/run.sh:/run.sh:ro
+    - proxy/html/:/etc/nginx/html/default:ro
+    - proxy/include/:/etc/nginx/include/default:ro
+    - proxy/nginx.toml:/etc/confd/conf.d/nginx.toml:ro
+    - proxy/nginx.conf:/etc/confd/templates/nginx.conf:ro
+  environment:
+    CLUSTER: local
+    UPSTREAMS: app
+
+app:
+  build: app
+  links:
+    - etcd:etcd
+  ports:
+    - 3000
+  environment:
+    CLUSTER: local
+    DOCKER_HOST: 192.168.59.103
+    ETCD_URL: http://etcd:4001
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - ./test/app:/go/src/app
 
 etcd:
   image: slintes/etcd:latest
