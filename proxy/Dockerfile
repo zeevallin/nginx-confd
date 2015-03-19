@@ -1,6 +1,6 @@
 FROM debian:wheezy
 
-MAINTAINER Philip Vieira <philip@chatspry.com>
+MAINTAINER ["Philip Vieira", "<philip@chatspry.com>"]
 
 # add nginx wheezy apt server
 RUN apt-key adv --keyserver pgp.mit.edu --recv-keys 573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62 \
@@ -31,9 +31,10 @@ RUN curl -s -L https://github.com/kelseyhightower/confd/releases/download/v${CON
   && mv confd /usr/local/bin/confd \
   && chmod +x /usr/local/bin/confd
 
-COPY html /etc/nginx/html
-COPY templates /etc/confd/templates
-COPY conf.d /etc/confd/conf.d
+COPY html /etc/nginx/html/default
+COPY include /etc/nginx/include/default
+COPY nginx.conf /etc/confd/templates/
+COPY nginx.toml /etc/confd/conf.d/
 
 # set up entrypoint for docker
 COPY docker-entrypoint.sh /docker-entrypoint.sh
@@ -43,6 +44,10 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
 # set up default scripts
 COPY run.sh /run.sh
 RUN chmod +x /run.sh
+
+# add custom html and includes on build
+ONBUILD COPY html /etc/nginx/html/custom
+ONBUILD COPY include /etc/nginx/include/custom
 
 WORKDIR /
 USER root
