@@ -12,6 +12,7 @@ proxy:
     - proxy/nginx.toml:/etc/confd/conf.d/nginx.toml:ro
     - proxy/nginx.conf:/etc/confd/templates/nginx.conf:ro
   environment:
+    SITES: docker
     CLUSTER: local
     UPSTREAMS: app
 

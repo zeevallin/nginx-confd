@@ -11,5 +11,6 @@ reload_cmd = "/usr/sbin/service nginx reload"
 
 prefix = "/nginx"
 keys = [
-  "/servers"
+  "/servers",
+  "/sites"
 ]
