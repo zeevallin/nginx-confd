@@ -27,7 +27,7 @@ app:
     ETCD_URL: http://etcd:4001
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
-    - ./test/app:/go/src/app
+    - ./test:/go/src/app
 
 site:
   build: site
