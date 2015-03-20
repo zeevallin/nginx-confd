@@ -29,6 +29,15 @@ app:
     - /var/run/docker.sock:/var/run/docker.sock
     - ./test/app:/go/src/app
 
+site:
+  build: site
+  links:
+    - etcd:etcd
+  environment:
+    ETCD_URL: http://etcd:4001
+  volumes:
+    - ./site:/go/src/app
+
 etcd:
   image: slintes/etcd:latest
   ports:
