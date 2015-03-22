@@ -58,8 +58,9 @@ func AnnounceSite(id string, site Site, client *etcd.Client) {
 }
 
 func main() {
-	site := NewSite("docker")
+	name := os.Getenv("VIRTUAL_HOST")
+	site := NewSite(name)
 	client := etcd.NewClient([]string{os.Getenv("ETCD_URL")})
-	go AnnounceSite("docker", site, client)
+	go AnnounceSite(name, site, client)
 	select {}
 }

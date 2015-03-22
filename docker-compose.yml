@@ -17,7 +17,7 @@ proxy:
     UPSTREAMS: app
 
 app:
-  build: app
+  build: test/app
   links:
     - etcd:etcd
   ports:
@@ -28,13 +28,12 @@ app:
     ETCD_URL: http://etcd:4001
 
 site:
-  build: site
+  build: test/site
   links:
     - etcd:etcd
   environment:
+    VIRTUAL_HOST: docker
     ETCD_URL: http://etcd:4001
-  volumes:
-    - ./site:/go/src/app
 
 reg:
   build: reg
