@@ -26,9 +26,6 @@ app:
     CLUSTER: local
     DOCKER_HOST: 192.168.59.103
     ETCD_URL: http://etcd:4001
-  volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
-    - ./test:/go/src/app
 
 site:
   build: site
@@ -38,6 +35,19 @@ site:
     ETCD_URL: http://etcd:4001
   volumes:
     - ./site:/go/src/app
+
+regis:
+  build: regis
+  links:
+    - etcd:etcd
+  environment:
+    HOST: 192.168.59.103
+    CLUSTER: local
+    MAPPING: app:*_app_*:3000
+    ETCD_URL: http://etcd:4001
+    DOCKER_HOST: unix:///var/run/docker.sock
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
 
 etcd:
   image: slintes/etcd:latest
