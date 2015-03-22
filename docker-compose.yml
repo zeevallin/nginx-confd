@@ -7,7 +7,7 @@ proxy:
     - 443:443
   volumes:
     - proxy/run.sh:/run.sh:ro
-    - proxy/html/:/etc/nginx/html/default:ro
+    - proxy/static/:/etc/nginx/static/default:ro
     - proxy/include/:/etc/nginx/include/default:ro
     - proxy/nginx.toml:/etc/confd/conf.d/nginx.toml:ro
     - proxy/nginx.conf:/etc/confd/templates/nginx.conf:ro

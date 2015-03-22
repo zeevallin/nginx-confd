@@ -23,6 +23,7 @@ RUN apt-get update -y \
   && apt-get clean -y \
   && rm -f \
     /etc/nginx/sites-enabled/default \
+    /etc/nginx/html \
     /etc/nginx/nginx.conf
 ENV DEBIAN_FRONTEND newt
 
@@ -31,7 +32,7 @@ RUN curl -s -L https://github.com/kelseyhightower/confd/releases/download/v${CON
   && mv confd /usr/local/bin/confd \
   && chmod +x /usr/local/bin/confd
 
-COPY html /etc/nginx/html/default
+COPY static /etc/nginx/static/default
 COPY include /etc/nginx/include/default
 COPY nginx.conf /etc/confd/templates/
 COPY nginx.toml /etc/confd/conf.d/
@@ -45,8 +46,8 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
 COPY run.sh /run.sh
 RUN chmod +x /run.sh
 
-# add custom html and includes on build
-ONBUILD COPY html /etc/nginx/html/custom
+# add custom static files and includes on build
+ONBUILD COPY static /etc/nginx/static/custom
 ONBUILD COPY include /etc/nginx/include/custom
 
 WORKDIR /
