@@ -122,7 +122,7 @@ func handleSignals() {
 func announce(key string, server Server, etc *etcd.Client) {
 	marshal, _ := json.Marshal(server)
 	value := string(marshal)
-	log.Println("Announcing", server.Host, "as", value)
+	log.Println("Announcing", key, "as", value)
 	etc.Set(key, value, 10)
 }
 
