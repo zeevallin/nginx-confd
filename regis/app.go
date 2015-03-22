@@ -159,7 +159,7 @@ func checkContainers(mappings []Mapping, docker dockerclient.Client, etc *etcd.C
 				}
 
 				for _, port := range ports {
-					key := fmt.Sprintf("/nginx/servers/%s/%s/%s", CLUSTER, mapping.Upstream, container.Id)
+					key := fmt.Sprintf("/nginx/servers/%s/%s/%s", CLUSTER, mapping.Upstream, container.Id[0:12])
 					pointers[key] = newServer(HOST, port)
 				}
 			}
