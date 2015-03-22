@@ -126,41 +126,46 @@ func announce(key string, server Server, etc *etcd.Client) {
 	etc.Set(key, value, 10)
 }
 
+func extractContainerName(container dockerclient.Container) string {
+	var realName string
+	for _, name := range container.Names {
+		if !isLinkedName(name) {
+			realName = name
+			break
+		}
+	}
+	return realName
+}
+
+func extractContainerPorts(mapping Mapping, container dockerclient.Container) []int {
+	var ports []int
+	for _, port := range container.Ports {
+		if isMappedPort(mapping, port) {
+			ports = append(ports, port.PublicPort)
+		}
+	}
+	return ports
+}
+
 func checkContainers(mappings []Mapping, docker dockerclient.Client, etc *etcd.Client) {
 
 	for {
-
+		pointers := map[string]Server{}
 		containers, err := docker.ListContainers(false, true, "")
 		logFatalIf(err)
 
-		pointers := map[string]Server{}
-
 		for _, container := range containers {
-
-			var name string
-
-			for _, containerName := range container.Names {
-				if !isLinkedName(containerName) {
-					name = containerName
-					break
-				}
-			}
+			name := extractContainerName(container)
 
 			for _, mapping := range mappings {
 
-				var ports []int
-
 				if isMappedName(mapping, name) {
-					for _, port := range container.Ports {
-						if isMappedPort(mapping, port) {
-							ports = append(ports, port.PublicPort)
-						}
-					}
-				}
+					ports := extractContainerPorts(mapping, container)
 
-				for _, port := range ports {
-					key := fmt.Sprintf("/nginx/servers/%s/%s/%s", CLUSTER, mapping.Upstream, container.Id[0:12])
-					pointers[key] = newServer(HOST, port)
+					for _, port := range ports {
+						key := fmt.Sprintf("/nginx/servers/%s/%s/%s", CLUSTER, mapping.Upstream, container.Id[0:12])
+						pointers[key] = newServer(HOST, port)
+					}
 				}
 			}
 		}
@@ -175,7 +180,6 @@ func checkContainers(mappings []Mapping, docker dockerclient.Client, etc *etcd.C
 }
 
 func run() {
-
 	mappings := newMappings()
 	docker := newDocker()
 	etc := etcd.NewClient([]string{ETCD_URL})
@@ -186,7 +190,6 @@ func run() {
 }
 
 func main() {
-
 	captureEnvironment()
 
 	go handleSignals()
