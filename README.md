@@ -10,3 +10,6 @@ Then you can scale the `app` service to whatever number you like.
 $ docker-compose up -d
 $ docker-compose scale app=5
 ```
+
+## Caveats
+Currently only **etcd** is supported the supported backend.
