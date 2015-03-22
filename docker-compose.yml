@@ -36,8 +36,8 @@ site:
   volumes:
     - ./site:/go/src/app
 
-regis:
-  build: regis
+reg:
+  build: reg
   links:
     - etcd:etcd
   environment:
