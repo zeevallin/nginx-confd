@@ -12,4 +12,4 @@ $ docker-compose scale app=5
 ```
 
 ## Caveats
-Currently only **etcd** is supported the supported backend.
+Currently **etcd** is the only supported backend.
