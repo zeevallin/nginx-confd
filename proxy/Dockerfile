@@ -9,7 +9,7 @@ RUN apt-key adv --keyserver pgp.mit.edu --recv-keys 573BFD6B3D8FBC641079A6ABABF5
 
 # ser versions for nginx and confd
 ENV JQ_VERSION 1.4-1~bpo70+1
-ENV NGINX_VERSION 1.7.10-1~wheezy
+ENV NGINX_VERSION 1.9.1-1~wheezy
 ENV CONFD_VERSION 0.7.1
 
 # upgrade operating system and install dependencies with apt
